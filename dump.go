@@ -19,7 +19,7 @@ func dumpReviews(url string) {
 	} else {
 		file = &reviewFile{
 			URL:     url,
-			Reviews: reviews,
+			Reviews: []*review{},
 		}
 	}
 
