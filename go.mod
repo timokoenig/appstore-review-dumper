@@ -1,4 +1,4 @@
-module github.com/timokoenig/appstore-review-dump
+module github.com/timokoenig/appstore-review-dumper
 
 go 1.14
 
