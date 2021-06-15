@@ -68,13 +68,18 @@ func loadRecentReviews(url string) []*review {
 	err = chromedp.Run(ctx,
 		chromedp.Evaluate(`
 		(() => {
+			function parseDate(input) {
+				var parts = input.match(/(\d+)/g), i = 0, fmt = {};
+				'dd.mm.yyyy'.replace(/(yyyy|dd|mm)/g, function(part) { fmt[part] = i++; });
+				return Date.parse(new Date(parts[fmt['yyyy']], parts[fmt['mm']]-1, parts[fmt['dd']]));
+			}
 			var reviews = document.getElementsByClassName('we-customer-review');
 			var json = [];
 			for (var i = 0; i < reviews.length; i++) {
 				json.push({
 					title: reviews[i].getElementsByTagName('h3')[0].textContent.trim(),
 					text: reviews[i].getElementsByClassName('we-clamp')[0].textContent.trim(),
-					date: Date.parse(reviews[i].getElementsByClassName('we-customer-review__date')[0].textContent.trim()),
+					date: parseDate(reviews[i].getElementsByClassName('we-customer-review__date')[0].textContent.trim()),
 					dateString: reviews[i].getElementsByClassName('we-customer-review__date')[0].textContent.trim(),
 					user: reviews[i].getElementsByClassName('we-customer-review__user')[0].textContent.trim(),
 					rating: parseInt(reviews[i].getElementsByClassName('we-star-rating')[0].getAttribute('aria-label').trim().split(' ')[0])
